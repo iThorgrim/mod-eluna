@@ -257,11 +257,15 @@ public:
     static void Push(lua_State* luastate, Pet const* pet);
     static void Push(lua_State* luastate, TempSummon const* summon);
     static void Push(lua_State* luastate, ObjectGuid const guid);
+    static void Push(lua_State* luastate, GemPropertiesEntry const& gemProperties);
+    static void Push(lua_State* luastate, SpellEntry const& spell);
     template<typename T>
     static void Push(lua_State* luastate, T const* ptr)
     {
         ElunaTemplate<T>::Push(luastate, ptr);
     }
+    
+    static std::string FormatQuery(lua_State* L, const char* query);
 
     bool ExecuteCall(int params, int res);
 
