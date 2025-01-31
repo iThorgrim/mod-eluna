@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -7,15 +7,26 @@
 #ifndef _ELUNA_UTIL_H
 #define _ELUNA_UTIL_H
 
-#include <unordered_map>
-#include <unordered_set>
-#include <mutex>
-#include <memory>
+#include "Common.h"
+
+#define EXP_WOTLK 2
+
 #include "Common.h"
 #include "SharedDefines.h"
 #include "ObjectGuid.h"
 #include "Database/QueryResult.h"
 #include "Log.h"
+
+#include <unordered_map>
+#include <unordered_set>
+#include <mutex>
+#include <memory>
+
+#define USING_BOOST
+
+#if AC_PLATFORM == AC_PLATFORM_WINDOWS
+#define ELUNA_WINDOWS
+#endif
 
 typedef QueryResult ElunaQuery;
 #define GET_GUID                GetGUID
@@ -37,18 +48,20 @@ typedef QueryResult ElunaQuery;
 #define ELUNA_LOG_ERROR(...)    LOG_ERROR("eluna", __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    LOG_DEBUG("eluna", __VA_ARGS__);
 
-#ifndef MAKE_NEW_GUID
+#if !defined MAKE_NEW_GUID
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #endif
-#ifndef GUID_ENPART
+#if !defined GUID_ENPART
 #define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()
 #endif
-#ifndef GUID_LOPART
+#if !defined GUID_LOPART
 #define GUID_LOPART(guid)       ObjectGuid(guid).GetCounter()
 #endif
-#ifndef GUID_HIPART
+#if !defined GUID_HIPART
 #define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
 #endif
+
+typedef std::vector<uint8> BytecodeBuffer;
 
 class Unit;
 class WorldObject;
@@ -101,25 +114,6 @@ namespace ElunaUtil
     };
 
     /*
-     * Usage:
-     * Inherit this class, then when needing lock, use
-     * Guard guard(GetLock());
-     *
-     * The lock is automatically released at end of scope
-     */
-    class Lockable
-    {
-    public:
-        typedef std::mutex LockType;
-        typedef std::lock_guard<LockType> Guard;
-
-        LockType& GetLock() { return _lock; }
-
-    private:
-        LockType _lock;
-    };
-
-    /*
      * Encodes `data` in Base-64 and store the result in `output`.
      */
     void EncodeData(const unsigned char* data, size_t input_length, std::string& output);
@@ -133,3 +127,4 @@ namespace ElunaUtil
 };
 
 #endif
+

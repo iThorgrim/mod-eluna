@@ -14,9 +14,9 @@ namespace LuaAchievement
      *
      * @return uint32 id
      */
-    int GetId(lua_State* L, AchievementEntry* const achievement)
+    int GetId(Eluna* E, AchievementEntry* const achievement)
     {
-        Eluna::Push(L, achievement->ID);
+        E->Push(achievement->ID);
         return 1;
     }
 
@@ -39,16 +39,23 @@ namespace LuaAchievement
      * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [Achievement] name in
      * @return string name
      */
-    int GetName(lua_State* L, AchievementEntry* const achievement)
+    int GetName(Eluna* E, AchievementEntry* const achievement)
     {
-        uint8 locale = Eluna::CHECKVAL<uint8>(L, 2, DEFAULT_LOCALE);
+        uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
         if (locale >= TOTAL_LOCALES)
         {
-            return luaL_argerror(L, 2, "valid LocaleConstant expected");
+            return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
         }
 
-        Eluna::Push(L, achievement->name[locale]);
+        E->Push(achievement->name[locale]);
         return 1;
     }
+
+    ElunaRegister<AchievementEntry> AchievementMethods[] =
+    {
+        { "GetId", &LuaAchievement::GetId },
+        { "GetName", &LuaAchievement::GetName },
+    };
 };
 #endif
+

@@ -7,8 +7,6 @@
 #ifndef CHATHANDLERMETHODS_H
 #define CHATHANDLERMETHODS_H
 
-#include "Chat.h"
-
 namespace LuaChatHandler
 {
     /**
@@ -19,16 +17,16 @@ namespace LuaChatHandler
      * @param string text : text to display in chat or console
      * @param uint32 entry : id of the string to display
      */
-    int SendSysMessage(lua_State* L, ChatHandler* handler)
+    int SendSysMessage(Eluna* E, ChatHandler* handler)
     {
-        if (lua_isnumber(L, 2))
+        if (lua_isnumber(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(2);
             handler->SendSysMessage(entry);
         }
         else
         {
-            std::string text = Eluna::CHECKVAL<std::string>(L, 2);
+            std::string text = E->CHECKVAL<std::string>(2);
             handler->SendSysMessage(text);
         }
         return 0;
@@ -39,9 +37,9 @@ namespace LuaChatHandler
      *
      * @return bool isConsole
      */
-    int IsConsole(lua_State* L, ChatHandler* handler)
+    int IsConsole(Eluna* E, ChatHandler* handler)
     {
-        Eluna::Push(L, handler->IsConsole());
+        E->Push(handler->IsConsole());
         return 1;
     }
 
@@ -50,9 +48,9 @@ namespace LuaChatHandler
      *
      * @return [Player] player
      */
-    int GetPlayer(lua_State* L, ChatHandler* handler)
+    int GetPlayer(Eluna* E, ChatHandler* handler)
     {
-        Eluna::Push(L, handler->GetPlayer());
+        E->Push(handler->GetPlayer());
         return 1;
     }
 
@@ -61,9 +59,9 @@ namespace LuaChatHandler
      *
      * @param string text : text to send
      */
-    int SendGlobalSysMessage(lua_State* L, ChatHandler* handler)
+    int SendGlobalSysMessage(Eluna* E, ChatHandler* handler)
     {
-        std::string text = Eluna::CHECKVAL<std::string>(L, 2);
+        std::string text = E->CHECKVAL<std::string>(2);
         handler->SendGlobalSysMessage(text.c_str());
         return 0;
     }
@@ -73,9 +71,9 @@ namespace LuaChatHandler
      *
      * @param string text : text to send
      */
-    int SendGlobalGMSysMessage(lua_State* L, ChatHandler* handler)
+    int SendGlobalGMSysMessage(Eluna* E, ChatHandler* handler)
     {
-        std::string text = Eluna::CHECKVAL<std::string>(L, 2);
+        std::string text = E->CHECKVAL<std::string>(2);
         handler->SendGlobalGMSysMessage(text.c_str());
         return 0;
     }
@@ -87,11 +85,11 @@ namespace LuaChatHandler
      * @param [bool] strong = false : Forces non-player accounts (security level greater than `0`) to go through the regular check if set to `true`.<br>Also, if set to `true`, the current security level will be considered as lower than the [Player]'s security level if the two levels are equal
      * @return [bool] lower
      */
-    int HasLowerSecurity(lua_State* L, ChatHandler* handler)
+    int HasLowerSecurity(Eluna* E, ChatHandler* handler)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
-        bool strong = Eluna::CHECKVAL<bool>(L, 3);
-        Eluna::Push(L, handler->HasLowerSecurity(player, ObjectGuid::Empty, strong));
+        Player* player = E->CHECKOBJ<Player>(2);
+        bool strong = E->CHECKVAL<bool>(3);
+        E->Push(handler->HasLowerSecurity(player, ObjectGuid::Empty, strong));
         return 1;
     }
 
@@ -102,11 +100,11 @@ namespace LuaChatHandler
      * @param [bool] strong = false : Forces non-player accounts (security level greater than `0`) to go through the regular check if set to `true`.<br>Also, if set to `true`, the current security level will be considered as lower than the `account`'s security level if the two levels are equal
      * @return [bool] lower
      */
-    int HasLowerSecurityAccount(lua_State* L, ChatHandler* handler)
+    int HasLowerSecurityAccount(Eluna* E, ChatHandler* handler)
     {
-        uint32 account = Eluna::CHECKVAL<uint32>(L, 2);
-        bool strong = Eluna::CHECKVAL<bool>(L, 3);
-        Eluna::Push(L, handler->HasLowerSecurityAccount(nullptr, account, strong));
+        uint32 account = E->CHECKVAL<uint32>(2);
+        bool strong = E->CHECKVAL<bool>(3);
+        E->Push(handler->HasLowerSecurityAccount(nullptr, account, strong));
         return 1;
     }
 
@@ -115,9 +113,9 @@ namespace LuaChatHandler
      *
      * @return [Player] player
      */
-    int GetSelectedPlayer(lua_State* L, ChatHandler* handler)
+    int GetSelectedPlayer(Eluna* E, ChatHandler* handler)
     {
-        Eluna::Push(L, handler->getSelectedPlayer());
+        E->Push(handler->getSelectedPlayer());
         return 1;
     }
 
@@ -126,9 +124,9 @@ namespace LuaChatHandler
      *
      * @return [Creature] creature
      */
-    int GetSelectedCreature(lua_State* L, ChatHandler* handler)
+    int GetSelectedCreature(Eluna* E, ChatHandler* handler)
     {
-        Eluna::Push(L, handler->getSelectedCreature());
+        E->Push(handler->getSelectedCreature());
         return 1;
     }
 
@@ -137,9 +135,9 @@ namespace LuaChatHandler
      *
      * @return [Unit] unit
      */
-    int GetSelectedUnit(lua_State* L, ChatHandler* handler)
+    int GetSelectedUnit(Eluna* E, ChatHandler* handler)
     {
-        Eluna::Push(L, handler->getSelectedUnit());
+        E->Push(handler->getSelectedUnit());
         return 1;
     }
 
@@ -148,9 +146,9 @@ namespace LuaChatHandler
      *
      * @return [WorldObject] object
      */
-    int GetSelectedObject(lua_State* L, ChatHandler* handler)
+    int GetSelectedObject(Eluna* E, ChatHandler* handler)
     {
-        Eluna::Push(L, handler->getSelectedObject());
+        E->Push(handler->getSelectedObject());
         return 1;
     }
 
@@ -159,9 +157,9 @@ namespace LuaChatHandler
      *
      * @return [Player] player
      */
-    int GetSelectedPlayerOrSelf(lua_State* L, ChatHandler* handler)
+    int GetSelectedPlayerOrSelf(Eluna* E, ChatHandler* handler)
     {
-        Eluna::Push(L, handler->getSelectedPlayerOrSelf());
+        E->Push(handler->getSelectedPlayerOrSelf());
         return 1;
     }
 
@@ -171,10 +169,10 @@ namespace LuaChatHandler
      * @param [uint32] securityLevel
      * @return [bool] isAvailable
      */
-    int IsAvailable(lua_State* L, ChatHandler* handler)
+    int IsAvailable(Eluna* E, ChatHandler* handler)
     {
-        uint32 securityLevel = Eluna::CHECKVAL<uint32>(L, 2);
-        Eluna::Push(L, handler->IsAvailable(securityLevel));
+        uint32 securityLevel = E->CHECKVAL<uint32>(2);
+        E->Push(handler->IsAvailable(securityLevel));
         return 1;
     }
 
@@ -183,10 +181,29 @@ namespace LuaChatHandler
      *
      * @return [bool] sentErrorMessage
      */
-    int HasSentErrorMessage(lua_State* L, ChatHandler* handler)
+    int HasSentErrorMessage(Eluna* E, ChatHandler* handler)
     {
-        Eluna::Push(L, handler->HasSentErrorMessage());
+        E->Push(handler->HasSentErrorMessage());
         return 1;
     }
+    
+    ElunaRegister<ChatHandler> ChatHandlerMethods[] =
+    {
+        { "SendSysMessage", &LuaChatHandler::SendSysMessage },
+        { "IsConsole", &LuaChatHandler::IsConsole },
+        { "GetPlayer", &LuaChatHandler::GetPlayer },
+        { "SendGlobalSysMessage", &LuaChatHandler::SendGlobalSysMessage },
+        { "SendGlobalGMSysMessage", &LuaChatHandler::SendGlobalGMSysMessage },
+        { "HasLowerSecurity", &LuaChatHandler::HasLowerSecurity },
+        { "HasLowerSecurityAccount", &LuaChatHandler::HasLowerSecurityAccount },
+        { "GetSelectedPlayer", &LuaChatHandler::GetSelectedPlayer },
+        { "GetSelectedCreature", &LuaChatHandler::GetSelectedCreature },
+        { "GetSelectedUnit", &LuaChatHandler::GetSelectedUnit },
+        { "GetSelectedObject", &LuaChatHandler::GetSelectedObject },
+        { "GetSelectedPlayerOrSelf", &LuaChatHandler::GetSelectedPlayerOrSelf },
+        { "IsAvailable", &LuaChatHandler::IsAvailable },
+        { "HasSentErrorMessage", &LuaChatHandler::HasSentErrorMessage },
+    };
 }
 #endif
+

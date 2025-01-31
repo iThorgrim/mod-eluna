@@ -15,26 +15,20 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT, AI) \
-    if (!IsEnabled())\
-        return;\
     auto mapKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetId());\
     auto instanceKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetInstanceId());\
     if (!MapEventBindings->HasBindingsFor(mapKey) && !InstanceEventBindings->HasBindingsFor(instanceKey))\
         return;\
-    LOCK_ELUNA;\
-    PushInstanceData(L, AI);\
-    Push(AI->instance)
+    PushInstanceData(AI);\
+    HookPush<Map>(AI->instance)
 
 #define START_HOOK_WITH_RETVAL(EVENT, AI, RETVAL) \
-    if (!IsEnabled())\
-        return RETVAL;\
     auto mapKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetId());\
     auto instanceKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetInstanceId());\
     if (!MapEventBindings->HasBindingsFor(mapKey) && !InstanceEventBindings->HasBindingsFor(instanceKey))\
         return RETVAL;\
-    LOCK_ELUNA;\
-    PushInstanceData(L, AI);\
-    Push(AI->instance)
+    PushInstanceData(AI);\
+    HookPush<Map>(AI->instance)
 
 void Eluna::OnInitialize(ElunaInstanceAI* ai)
 {
@@ -51,28 +45,28 @@ void Eluna::OnLoad(ElunaInstanceAI* ai)
 void Eluna::OnUpdateInstance(ElunaInstanceAI* ai, uint32 diff)
 {
     START_HOOK(INSTANCE_EVENT_ON_UPDATE, ai);
-    Push(diff);
+    HookPush(diff);
     CallAllFunctions(MapEventBindings, InstanceEventBindings, mapKey, instanceKey);
 }
 
 void Eluna::OnPlayerEnterInstance(ElunaInstanceAI* ai, Player* player)
 {
     START_HOOK(INSTANCE_EVENT_ON_PLAYER_ENTER, ai);
-    Push(player);
+    HookPush(player);
     CallAllFunctions(MapEventBindings, InstanceEventBindings, mapKey, instanceKey);
 }
 
 void Eluna::OnCreatureCreate(ElunaInstanceAI* ai, Creature* creature)
 {
     START_HOOK(INSTANCE_EVENT_ON_CREATURE_CREATE, ai);
-    Push(creature);
+    HookPush(creature);
     CallAllFunctions(MapEventBindings, InstanceEventBindings, mapKey, instanceKey);
 }
 
 void Eluna::OnGameObjectCreate(ElunaInstanceAI* ai, GameObject* gameobject)
 {
     START_HOOK(INSTANCE_EVENT_ON_GAMEOBJECT_CREATE, ai);
-    Push(gameobject);
+    HookPush(gameobject);
     CallAllFunctions(MapEventBindings, InstanceEventBindings, mapKey, instanceKey);
 }
 

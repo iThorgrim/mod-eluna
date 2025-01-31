@@ -18,9 +18,9 @@ namespace LuaGemPropertiesEntry
      *
      * @return uint32 id : The ID of the specified GemPropertiesEntry.
      */
-    int GetId(lua_State* L, GemPropertiesEntry* gemProperties)
+    int GetId(Eluna* E, GemPropertiesEntry* gemProperties)
     {
-        Eluna::Push(L, gemProperties->ID);
+        E->Push(gemProperties->ID);
         return 1;
     }
 
@@ -31,11 +31,18 @@ namespace LuaGemPropertiesEntry
      *
      * @return uint32 spellitemenchantement : The spell item enchantment ID.
      */
-    int GetSpellItemEnchantement(lua_State* L, GemPropertiesEntry* entry)
+    int GetSpellItemEnchantement(Eluna* E, GemPropertiesEntry* entry)
     {
-        Eluna::Push(L, entry->spellitemenchantement);
+        E->Push(entry->spellitemenchantement);
         return 1;
     }
+
+    ElunaRegister<GemPropertiesEntry> GemPropertiesEntryMethods[] =
+    {
+        // Getters
+        { "GetId", &LuaGemPropertiesEntry::GetId },
+        { "GetSpellItemEnchantement", &LuaGemPropertiesEntry::GetSpellItemEnchantement }
+    };
 }
 #endif
 

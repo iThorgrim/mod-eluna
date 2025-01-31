@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -7,6 +7,7 @@
 #include "ElunaUtility.h"
 #include "World.h"
 #include "Object.h"
+#include "ObjectMgr.h"
 #include "Unit.h"
 #include "GameObject.h"
 #include "DBCStores.h"
@@ -71,7 +72,6 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
     {
         if (i_dead && (i_dead == 1) != target->IsAlive())
             return false;
-
         if (i_hostile)
         {
             if (!i_obj_unit)
@@ -186,3 +186,4 @@ unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
 
     return decoded_data;
 }
+

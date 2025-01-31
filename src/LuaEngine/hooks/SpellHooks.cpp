@@ -14,27 +14,21 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT, ENTRY) \
-    if (!IsEnabled())\
-        return;\
     auto key = EntryKey<SpellEvents>(EVENT, ENTRY);\
     if (!SpellEventBindings->HasBindingsFor(key))\
-        return;\
-    LOCK_ELUNA
+        return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, ENTRY, RETVAL) \
-    if (!IsEnabled())\
-        return RETVAL;\
     auto key = EntryKey<SpellEvents>(EVENT, ENTRY);\
     if (!SpellEventBindings->HasBindingsFor(key))\
-        return RETVAL;\
-    LOCK_ELUNA
+        return RETVAL;
 
 void Eluna::OnSpellCastCancel(Unit* caster, Spell* spell, SpellInfo const* spellInfo, bool bySelf)
 {
     START_HOOK(SPELL_EVENT_ON_CAST_CANCEL, spellInfo->Id);
-    Push(caster);
-    Push(spell);
-    Push(bySelf);
+    HookPush(caster);
+    HookPush(spell);
+    HookPush(bySelf);
 
     CallAllFunctions(SpellEventBindings, key);
 }
@@ -42,9 +36,9 @@ void Eluna::OnSpellCastCancel(Unit* caster, Spell* spell, SpellInfo const* spell
 void Eluna::OnSpellCast(Unit* caster, Spell* spell, SpellInfo const* spellInfo, bool skipCheck)
 {
     START_HOOK(SPELL_EVENT_ON_CAST, spellInfo->Id);
-    Push(caster);
-    Push(spell);
-    Push(skipCheck);
+    HookPush(caster);
+    HookPush(spell);
+    HookPush(skipCheck);
 
     CallAllFunctions(SpellEventBindings, key);
 }
@@ -52,8 +46,8 @@ void Eluna::OnSpellCast(Unit* caster, Spell* spell, SpellInfo const* spellInfo, 
 void Eluna::OnSpellPrepare(Unit* caster, Spell* spell, SpellInfo const* spellInfo)
 {
     START_HOOK(SPELL_EVENT_ON_PREPARE, spellInfo->Id);
-    Push(caster);
-    Push(spell);
+    HookPush(caster);
+    HookPush(spell);
 
     CallAllFunctions(SpellEventBindings, key);
 }

@@ -7,8 +7,6 @@
 #ifndef ITEMTEMPLATEMETHODS_H
 #define ITEMTEMPLATEMETHODS_H
 
-#include "Chat.h"
-
 namespace LuaItemTemplate
 {
     /**
@@ -16,9 +14,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 itemId
      */
-    int GetItemId(lua_State* L, ItemTemplate* itemTemplate)
+    int GetItemId(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->ItemId);
+        E->Push(itemTemplate->ItemId);
         return 1;
     }
 
@@ -27,9 +25,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 class
      */
-    int GetClass(lua_State* L, ItemTemplate* itemTemplate)
+    int GetClass(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->Class);
+        E->Push(itemTemplate->Class);
         return 1;
     }
 
@@ -38,9 +36,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 subClass
      */
-    int GetSubClass(lua_State* L, ItemTemplate* itemTemplate)
+    int GetSubClass(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->SubClass);
+        E->Push(itemTemplate->SubClass);
         return 1;
     }
 
@@ -51,9 +49,9 @@ namespace LuaItemTemplate
      * 
      * @return string name
      */
-    int GetName(lua_State* L, ItemTemplate* itemTemplate)
+    int GetName(Eluna* E, ItemTemplate* itemTemplate)
     {
-        uint32 loc_idx = Eluna::CHECKVAL<uint32>(L, 2, LocaleConstant::LOCALE_enUS);
+        uint32 loc_idx = E->CHECKVAL<uint32>(2, LocaleConstant::LOCALE_enUS);
 
         const ItemLocale* itemLocale = eObjectMgr->GetItemLocale(itemTemplate->ItemId);
         std::string name = itemTemplate->Name1;
@@ -61,7 +59,7 @@ namespace LuaItemTemplate
         if (itemLocale && !itemLocale->Name[loc_idx].empty())
             name = itemLocale->Name[loc_idx];
 
-        Eluna::Push(L, name);
+        E->Push(name);
         return 1;
     }
 
@@ -70,9 +68,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 displayId
      */
-    int GetDisplayId(lua_State* L, ItemTemplate* itemTemplate)
+    int GetDisplayId(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->DisplayInfoID);
+        E->Push(itemTemplate->DisplayInfoID);
         return 1;
     }
 
@@ -81,9 +79,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 quality
      */
-    int GetQuality(lua_State* L, ItemTemplate* itemTemplate)
+    int GetQuality(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->Quality);
+        E->Push(itemTemplate->Quality);
         return 1;
     }
 
@@ -92,9 +90,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 flags
      */
-    int GetFlags(lua_State* L, ItemTemplate* itemTemplate)
+    int GetFlags(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->Flags);
+        E->Push(itemTemplate->Flags);
         return 1;
     }
 
@@ -103,9 +101,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 flags
      */
-    int GetExtraFlags(lua_State* L, ItemTemplate* itemTemplate)
+    int GetExtraFlags(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->Flags2);
+        E->Push(itemTemplate->Flags2);
         return 1;
     }
 
@@ -114,9 +112,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 buyCount
      */
-    int GetBuyCount(lua_State* L, ItemTemplate* itemTemplate)
+    int GetBuyCount(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->BuyCount);
+        E->Push(itemTemplate->BuyCount);
         return 1;
     }
 
@@ -125,9 +123,9 @@ namespace LuaItemTemplate
      *
      * @return int32 buyPrice
      */
-    int GetBuyPrice(lua_State* L, ItemTemplate* itemTemplate)
+    int GetBuyPrice(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->BuyPrice);
+        E->Push(itemTemplate->BuyPrice);
         return 1;
     }
 
@@ -136,9 +134,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 sellPrice
      */
-    int GetSellPrice(lua_State* L, ItemTemplate* itemTemplate)
+    int GetSellPrice(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->SellPrice);
+        E->Push(itemTemplate->SellPrice);
         return 1;
     }
 
@@ -147,9 +145,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 inventoryType
      */
-    int GetInventoryType(lua_State* L, ItemTemplate* itemTemplate)
+    int GetInventoryType(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->InventoryType);
+        E->Push(itemTemplate->InventoryType);
         return 1;
     }
 
@@ -158,9 +156,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 allowableClass
      */
-    int GetAllowableClass(lua_State* L, ItemTemplate* itemTemplate)
+    int GetAllowableClass(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->AllowableClass);
+        E->Push(itemTemplate->AllowableClass);
         return 1;
     }
 
@@ -169,9 +167,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 allowableRace
      */
-    int GetAllowableRace(lua_State* L, ItemTemplate* itemTemplate)
+    int GetAllowableRace(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->AllowableRace);
+        E->Push(itemTemplate->AllowableRace);
         return 1;
     }
 
@@ -180,9 +178,9 @@ namespace LuaItemTemplate
      *
      * @return uint32 itemLevel
      */
-    int GetItemLevel(lua_State* L, ItemTemplate* itemTemplate)
+    int GetItemLevel(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->ItemLevel);
+        E->Push(itemTemplate->ItemLevel);
         return 1;
     }
 
@@ -191,11 +189,32 @@ namespace LuaItemTemplate
      *
      * @return uint32 requiredLevel
      */
-    int GetRequiredLevel(lua_State* L, ItemTemplate* itemTemplate)
+    int GetRequiredLevel(Eluna* E, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->RequiredLevel);
+        E->Push(itemTemplate->RequiredLevel);
         return 1;
     }
+
+    ElunaRegister<ItemTemplate> ItemTemplateMethods[] =
+    {
+        { "GetItemId", &LuaItemTemplate::GetItemId },
+        { "GetClass", &LuaItemTemplate::GetClass },
+        { "GetSubClass", &LuaItemTemplate::GetSubClass },
+        { "GetName", &LuaItemTemplate::GetName },
+        { "GetDisplayId", &LuaItemTemplate::GetDisplayId },
+        { "GetQuality", &LuaItemTemplate::GetQuality },
+        { "GetFlags", &LuaItemTemplate::GetFlags },
+        { "GetExtraFlags", &LuaItemTemplate::GetExtraFlags },
+        { "GetBuyCount", &LuaItemTemplate::GetBuyCount },
+        { "GetBuyPrice", &LuaItemTemplate::GetBuyPrice },
+        { "GetSellPrice", &LuaItemTemplate::GetSellPrice },
+        { "GetInventoryType", &LuaItemTemplate::GetInventoryType },
+        { "GetAllowableClass", &LuaItemTemplate::GetAllowableClass },
+        { "GetAllowableRace", &LuaItemTemplate::GetAllowableRace },
+        { "GetItemLevel", &LuaItemTemplate::GetItemLevel },
+        { "GetRequiredLevel", &LuaItemTemplate::GetRequiredLevel }
+    };
 }
 
 #endif
+

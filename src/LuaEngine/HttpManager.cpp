@@ -248,27 +248,25 @@ void HttpManager::HandleHttpResponses()
             continue;
         }
 
-        LOCK_ELUNA;
-
-        lua_State* L = Eluna::GEluna->L;
+        Eluna* E = sWorld->GetEluna();
 
         // Get function
-        lua_rawgeti(L, LUA_REGISTRYINDEX, res->funcRef);
+        lua_rawgeti(E->L, LUA_REGISTRYINDEX, res->funcRef);
 
         // Push parameters
-        Eluna::Push(L, res->statusCode);
-        Eluna::Push(L, res->body);
-        lua_newtable(L);
-        for (const auto& item : res->headers) {
-            Eluna::Push(L, item.first);
-            Eluna::Push(L, item.second);
-            lua_settable(L, -3);
-        }
+        //HookPush(L, res->statusCode);
+        //E->HookPush(L, res->body);
+        //lua_newtable(L);
+        //for (const auto& item : res->headers) {
+        //    Eluna::Push(L, item.first);
+        //    Eluna::Push(L, item.second);
+        //    lua_settable(L, -3);
+        //}
 
         // Call function
-        Eluna::GEluna->ExecuteCall(3, 0);
+        sWorld->GetEluna()->ExecuteCall(3, 0);
 
-        luaL_unref(L, LUA_REGISTRYINDEX, res->funcRef);
+        luaL_unref(E->L, LUA_REGISTRYINDEX, res->funcRef);
 
         delete res;
     }

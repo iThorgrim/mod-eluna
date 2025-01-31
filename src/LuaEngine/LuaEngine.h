@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -8,20 +8,20 @@
 #define _LUA_ENGINE_H
 
 #include "Common.h"
-#include "SharedDefines.h"
-#include "DBCEnums.h"
+#include "ElunaUtility.h"
+#include "Hooks.h"
 
+#include "DBCEnums.h"
 #include "Group.h"
 #include "Item.h"
-#include "Chat.h"
-#include "Player.h"
+#include "MapMgr.h"
+#include "SharedDefines.h"
 #include "Weather.h"
 #include "World.h"
-#include "Hooks.h"
+#include "ObjectMgr.h"
+#include "Chat.h"
 #include "LFG.h"
-#include "ElunaUtility.h"
-#include "HttpManager.h"
-#include "EventEmitter.h"
+
 #include <mutex>
 #include <memory>
 
@@ -77,10 +77,19 @@ struct LuaScript
     std::string filename;
     std::string filepath;
     std::string modulepath;
+    BytecodeBuffer bytecode;
+    int32 mapId;
+};
+
+enum MethodRegisterState
+{
+    METHOD_REG_NONE = 0,
+    METHOD_REG_MAP,
+    METHOD_REG_WORLD,
+    METHOD_REG_ALL
 };
 
 #define ELUNA_STATE_PTR "Eluna State Ptr"
-#define LOCK_ELUNA Eluna::Guard __guard(Eluna::GetLock())
 
 #define ELUNA_GAME_API AC_GAME_API
 
@@ -88,33 +97,24 @@ class ELUNA_GAME_API Eluna
 {
 public:
     typedef std::list<LuaScript> ScriptList;
-
     typedef std::recursive_mutex LockType;
-    typedef std::lock_guard<LockType> Guard;
 
-    const std::string& GetRequirePath() const { return lua_requirepath; }
-    const std::string& GetRequireCPath() const { return lua_requirecpath; }
+    std::string FormatQuery(const char* query);
+
+    void ReloadEluna() { reload = true; }
+    bool ExecuteCall(int params, int res);
 
 private:
-    static bool reload;
-    static bool initialized;
-    static LockType lock;
 
-    // Lua script locations
-    static ScriptList lua_scripts;
-    static ScriptList lua_extensions;
-
-    // Lua script folder path
-    static std::string lua_folderpath;
-    // lua path variable for require() function
-    static std::string lua_requirepath;
-    static std::string lua_requirecpath;
+    // Indicates that the lua state should be reloaded
+    bool reload = false;
 
     // A counter for lua event stacks that occur (see event_level).
     // This is used to determine whether an object belongs to the current call stack or not.
     // 0 is reserved for always belonging to the call stack
     // 1 is reserved for a non valid callstackid
     uint64 callstackid = 2;
+
     // A counter for the amount of nested events. When the event_level
     // reaches 0 we are about to return back to C++. At this point the
     // objects used during the event stack are invalidated.
@@ -122,19 +122,16 @@ private:
     // When a hook pushes arguments to be passed to event handlers,
     //  this is used to keep track of how many arguments were pushed.
     uint8 push_counter;
-    bool enabled;
+
+    Map* const boundMap;
+
+    // Whether or not Eluna is in compatibility mode. Used in some method wrappers.
+    bool compatibilityMode;
 
     // Map from instance ID -> Lua table ref
     std::unordered_map<uint32, int> instanceDataRefs;
     // Map from map ID -> Lua table ref
     std::unordered_map<uint32, int> continentDataRefs;
-
-    Eluna();
-    ~Eluna();
-
-    // Prevent copy
-    Eluna(Eluna const&) = delete;
-    Eluna& operator=(const Eluna&) = delete;
 
     void OpenLua();
     void CloseLua();
@@ -144,13 +141,7 @@ private:
 
     // Use ReloadEluna() to make eluna reload
     // This is called on world update to reload eluna
-    static void _ReloadEluna();
-    static void LoadScriptPaths();
-    static void GetScripts(std::string path);
-    static void AddScriptPath(std::string filename, const std::string& fullpath);
-
-    static int StackTrace(lua_State *_L);
-    static void Report(lua_State* _L);
+    void _ReloadEluna();
 
     // Some helpers for hooks to call event handlers.
     // The bodies of the templates are in HookHelpers.h, so if you want to use them you need to #include "HookHelpers.h".
@@ -177,31 +168,30 @@ private:
     }
 
     // Non-static pushes, to be used in hooks.
-    // These just call the correct static version with the main thread's Lua state.
-    void Push()                                 { Push(L); ++push_counter; }
-    void Push(const long long value)            { Push(L, value); ++push_counter; }
-    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
-    void Push(const long value)                 { Push(L, value); ++push_counter; }
-    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
-    void Push(const int value)                  { Push(L, value); ++push_counter; }
-    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
-    void Push(const bool value)                 { Push(L, value); ++push_counter; }
-    void Push(const float value)                { Push(L, value); ++push_counter; }
-    void Push(const double value)               { Push(L, value); ++push_counter; }
-    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
-    void Push(const char* value)                { Push(L, value); ++push_counter; }
-    void Push(ObjectGuid const value)           { Push(L, value); ++push_counter; }
+    // They up the pushed value counter for hook helper functions.
+    void HookPush()                                 { Push(); ++push_counter; }
+    void HookPush(const long long value)            { Push(value); ++push_counter; }
+    void HookPush(const unsigned long long value)   { Push(value); ++push_counter; }
+    void HookPush(const long value)                 { Push(value); ++push_counter; }
+    void HookPush(const unsigned long value)        { Push(value); ++push_counter; }
+    void HookPush(const int value)                  { Push(value); ++push_counter; }
+    void HookPush(const unsigned int value)         { Push(value); ++push_counter; }
+    void HookPush(const bool value)                 { Push(value); ++push_counter; }
+    void HookPush(const float value)                { Push(value); ++push_counter; }
+    void HookPush(const double value)               { Push(value); ++push_counter; }
+    void HookPush(const std::string& value)         { Push(value); ++push_counter; }
+    void HookPush(const char* value)                { Push(value); ++push_counter; }
+    void HookPush(ObjectGuid const value)           { Push(value); ++push_counter; }
     template<typename T>
-    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
+    void HookPush(T const* ptr)                     { Push(ptr); ++push_counter; }
 
 public:
-    static Eluna* GEluna;
 
     lua_State* L;
     EventMgr* eventMgr;
-    HttpManager httpManager;
+
     QueryCallbackProcessor queryProcessor;
-    EventEmitter<void(std::string)> OnError;
+    QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;
@@ -215,21 +205,18 @@ public:
     BindingMap< EntryKey<Hooks::GossipEvents> >*     CreatureGossipBindings;
     BindingMap< EntryKey<Hooks::GameObjectEvents> >* GameObjectEventBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     GameObjectGossipBindings;
+    BindingMap< EntryKey<Hooks::SpellEvents> >*      SpellEventBindings;
     BindingMap< EntryKey<Hooks::ItemEvents> >*       ItemEventBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     ItemGossipBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     PlayerGossipBindings;
     BindingMap< EntryKey<Hooks::InstanceEvents> >*   MapEventBindings;
     BindingMap< EntryKey<Hooks::InstanceEvents> >*   InstanceEventBindings;
-    BindingMap< EntryKey<Hooks::SpellEvents> >*      SpellEventBindings;
 
-    BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >*  CreatureUniqueBindings;
+    BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >* CreatureUniqueBindings;
 
-    static void Initialize();
-    static void Uninitialize();
-    // This function is used to make eluna reload
-    static void ReloadEluna() { LOCK_ELUNA; reload = true; }
-    static LockType& GetLock() { return lock; };
-    static bool IsInitialized() { return initialized; }
+    static int StackTrace(lua_State* _L);
+    static void Report(lua_State* _L);
+
     // Never returns nullptr
     static Eluna* GetEluna(lua_State* L)
     {
@@ -242,36 +229,32 @@ public:
         return E;
     }
 
-    // Static pushes, can be used by anything, including methods.
-    static void Push(lua_State* luastate); // nil
-    static void Push(lua_State* luastate, const long long);
-    static void Push(lua_State* luastate, const unsigned long long);
-    static void Push(lua_State* luastate, const long);
-    static void Push(lua_State* luastate, const unsigned long);
-    static void Push(lua_State* luastate, const int);
-    static void Push(lua_State* luastate, const unsigned int);
-    static void Push(lua_State* luastate, const bool);
-    static void Push(lua_State* luastate, const float);
-    static void Push(lua_State* luastate, const double);
-    static void Push(lua_State* luastate, const std::string&);
-    static void Push(lua_State* luastate, const char*);
-    static void Push(lua_State* luastate, Object const* obj);
-    static void Push(lua_State* luastate, WorldObject const* obj);
-    static void Push(lua_State* luastate, Unit const* unit);
-    static void Push(lua_State* luastate, Pet const* pet);
-    static void Push(lua_State* luastate, TempSummon const* summon);
-    static void Push(lua_State* luastate, ObjectGuid const guid);
-    static void Push(lua_State* luastate, GemPropertiesEntry const& gemProperties);
-    static void Push(lua_State* luastate, SpellEntry const& spell);
+    // can be used by anything, including methods.
+    void Push(); // nil
+    void Push(const long long);
+    void Push(const unsigned long long);
+    void Push(const long);
+    void Push(const unsigned long);
+    void Push(const int);
+    void Push(const unsigned int);
+    void Push(const bool);
+    void Push(const float);
+    void Push(const double);
+    void Push(const std::string&);
+    void Push(const char*);
+    void Push(Object const* obj);
+    void Push(WorldObject const* obj);
+    void Push(Unit const* unit);
+    void Push(Pet const* pet);
+    void Push(TempSummon const* summon);
+    void Push(ObjectGuid const guid);
+    void Push(GemPropertiesEntry const& gemProperties);
+    void Push(SpellEntry const& spell);
     template<typename T>
-    static void Push(lua_State* luastate, T const* ptr)
+    void Push(T const* ptr)
     {
-        ElunaTemplate<T>::Push(luastate, ptr);
+        ElunaTemplate<T>::Push(this, ptr);
     }
-    
-    static std::string FormatQuery(lua_State* L, const char* query);
-
-    bool ExecuteCall(int params, int res);
 
     /*
      * Returns `true` if Eluna has instance data for `map`.
@@ -295,30 +278,56 @@ public:
      *   and loaded with the last known save state, and `Load`/`Initialize`
      *   hooks are called).
      */
-    void PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCounter = true);
+    void PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter = true);
 
     void RunScripts();
-    bool ShouldReload() const { return reload; }
-    bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
     uint64 GetCallstackId() const { return callstackid; }
-    int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+    int Register(uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+    void UpdateEluna(uint32 diff);
 
     // Checks
-    template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
-    template<typename T> static T CHECKVAL(lua_State* luastate, int narg, T def)
+    template<typename T> T CHECKVAL(int narg);
+    template<typename T> T CHECKVAL(int narg, T def)
     {
-        return lua_isnoneornil(luastate, narg) ? def : CHECKVAL<T>(luastate, narg);
+        return lua_isnoneornil(L, narg) ? def : CHECKVAL<T>(narg);
     }
-    template<typename T> static T* CHECKOBJ(lua_State* luastate, int narg, bool error = true)
+    template<typename T> T* CHECKOBJ(int narg, bool error = true)
     {
-        return ElunaTemplate<T>::Check(luastate, narg, error);
+        return ElunaTemplate<T>::Check(this, narg, error);
     }
-    static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char *tname, bool error = true);
+    ElunaObject* CHECKTYPE(int narg, const char* tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
     InstanceData* GetInstanceData(Map* map);
     void FreeInstanceId(uint32 instanceId);
+
+    Map* GetBoundMap() const { return boundMap; }
+
+    int32 GetBoundMapId() const
+    {
+        if(Map* map = GetBoundMap())
+            return map->GetId();
+
+        return -1;
+    }
+
+    uint32 GetBoundInstanceId() const
+    {
+        if(Map* map = GetBoundMap())
+            return map->GetInstanceId();
+
+        return 0;
+    }
+
+    bool GetCompatibilityMode() const { return compatibilityMode; }
+
+    Eluna(Map * map, bool compatMode = false);
+    ~Eluna();
+
+    // Prevent copy
+    Eluna(Eluna const&) = delete;
+    Eluna& operator=(const Eluna&) = delete;
 
     /* Custom */
     void OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj);
@@ -493,7 +502,7 @@ public:
     void OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType);
 
     /* Map */
-    void OnCreate(Map* map);
+    void OnMapCreate(Map* map);
     void OnDestroy(Map* map);
     void OnPlayerEnter(Map* map, Player* player);
     void OnPlayerLeave(Map* map, Player* player);
@@ -535,10 +544,9 @@ public:
     void OnSpellCast(Unit* caster, Spell* spell, SpellInfo const* spellInfo, bool skipCheck);
     void OnSpellCastCancel(Unit* caster, Spell* spell, SpellInfo const* spellInfo, bool bySelf);
 };
-template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error);
-template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error);
-template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, bool error);
-template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error);
+template<> Unit* Eluna::CHECKOBJ<Unit>(int narg, bool error);
+template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error);
+template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(int narg, bool error);
+template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(int narg, bool error);
 
-#define sEluna Eluna::GEluna
 #endif

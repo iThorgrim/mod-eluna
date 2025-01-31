@@ -18,10 +18,10 @@ namespace LuaVehicle
      * @param [Unit] passenger
      * @return bool isOnBoard
      */
-    int IsOnBoard(lua_State* L, Vehicle* vehicle)
+    int IsOnBoard(Eluna* E, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
-        Eluna::Push(L, passenger->IsOnVehicle(vehicle->GetBase()));
+        Unit* passenger = E->CHECKOBJ<Unit>(2);
+        E->Push(passenger->IsOnVehicle(vehicle->GetBase()));
         return 1;
     }
 
@@ -30,9 +30,9 @@ namespace LuaVehicle
      *
      * @return [Unit] owner
      */
-    int GetOwner(lua_State* L, Vehicle* vehicle)
+    int GetOwner(Eluna* E, Vehicle* vehicle)
     {
-        Eluna::Push(L, vehicle->GetBase());
+        E->Push(vehicle->GetBase());
         return 1;
     }
 
@@ -41,9 +41,9 @@ namespace LuaVehicle
      *
      * @return uint32 entry
      */
-    int GetEntry(lua_State* L, Vehicle* vehicle)
+    int GetEntry(Eluna* E, Vehicle* vehicle)
     {
-        Eluna::Push(L, vehicle->GetVehicleInfo()->m_ID);
+        E->Push(vehicle->GetVehicleInfo()->m_ID);
         return 1;
     }
 
@@ -53,10 +53,10 @@ namespace LuaVehicle
      * @param int8 seat
      * @return [Unit] passenger
      */
-    int GetPassenger(lua_State* L, Vehicle* vehicle)
+    int GetPassenger(Eluna* E, Vehicle* vehicle)
     {
-        int8 seatId = Eluna::CHECKVAL<int8>(L, 2);
-        Eluna::Push(L, vehicle->GetPassenger(seatId));
+        int8 seatId = E->CHECKVAL<int8>(2);
+        E->Push(vehicle->GetPassenger(seatId));
         return 1;
     }
 
@@ -66,10 +66,10 @@ namespace LuaVehicle
      * @param [Unit] passenger
      * @param int8 seat
      */
-    int AddPassenger(lua_State* L, Vehicle* vehicle)
+    int AddPassenger(Eluna* E, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
-        int8 seatId = Eluna::CHECKVAL<int8>(L, 3);
+        Unit* passenger = E->CHECKOBJ<Unit>(2);
+        int8 seatId = E->CHECKVAL<int8>(3);
 
         vehicle->AddPassenger(passenger, seatId);
         return 0;
@@ -80,12 +80,28 @@ namespace LuaVehicle
      *
      * @param [Unit] passenger
      */
-    int RemovePassenger(lua_State* L, Vehicle* vehicle)
+    int RemovePassenger(Eluna* E, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit* passenger = E->CHECKOBJ<Unit>(2);
         vehicle->RemovePassenger(passenger);
         return 0;
     }
-}
+
+    ElunaRegister<Vehicle> VehicleMethods[] =
+    {
+        // Getters
+        { "GetOwner", &LuaVehicle::GetOwner },
+        { "GetEntry", &LuaVehicle::GetEntry },
+        { "GetPassenger", &LuaVehicle::GetPassenger },
+
+        // Boolean
+        { "IsOnBoard", &LuaVehicle::IsOnBoard },
+
+        // Other
+        { "AddPassenger", &LuaVehicle::AddPassenger },
+        { "RemovePassenger", &LuaVehicle::RemovePassenger }
+    };
+};
 
 #endif // VEHICLEMETHODS_H
+

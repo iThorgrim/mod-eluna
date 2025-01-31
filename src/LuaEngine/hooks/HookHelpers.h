@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+ * Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
  * This program is free software licensed under GPL version 3
  * Please see the included DOCS/LICENSE.md for more information
  */
@@ -22,7 +22,7 @@ int Eluna::SetupStack(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, cons
     ASSERT(key1.event_id == key2.event_id);
     // Stack: [arguments]
 
-    Push(key1.event_id);
+    HookPush(key1.event_id);
     this->push_counter = 0;
     ++number_of_arguments;
     // Stack: [arguments], event_id
@@ -52,7 +52,7 @@ void Eluna::ReplaceArgument(T value, uint8 index)
     ASSERT(index < lua_gettop(L) && index > 0);
     // Stack: event_id, [arguments], [functions], [results]
 
-    Eluna::Push(L, value);
+    Push(value);
     // Stack: event_id, [arguments], [functions], [results], value
 
     lua_replace(L, index + 1);
@@ -119,3 +119,4 @@ bool Eluna::CallAllFunctionsBool(BindingMap<K1>* bindings1, BindingMap<K2>* bind
 }
 
 #endif // _HOOK_HELPERS_H
+

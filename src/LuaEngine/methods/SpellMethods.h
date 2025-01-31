@@ -19,9 +19,9 @@ namespace LuaSpell
      *
      * @return bool isAutoRepeating
      */
-    int IsAutoRepeat(lua_State* L, Spell* spell)
+    int IsAutoRepeat(Eluna* E, Spell* spell)
     {
-        Eluna::Push(L, spell->IsAutoRepeat());
+        E->Push(spell->IsAutoRepeat());
         return 1;
     }
 
@@ -30,9 +30,9 @@ namespace LuaSpell
      *
      * @return [Unit] caster
      */
-    int GetCaster(lua_State* L, Spell* spell)
+    int GetCaster(Eluna* E, Spell* spell)
     {
-        Eluna::Push(L, spell->GetCaster());
+        E->Push(spell->GetCaster());
         return 1;
     }
 
@@ -41,9 +41,9 @@ namespace LuaSpell
      *
      * @return int32 castTime
      */
-    int GetCastTime(lua_State* L, Spell* spell)
+    int GetCastTime(Eluna* E, Spell* spell)
     {
-        Eluna::Push(L, spell->GetCastTime());
+        E->Push(spell->GetCastTime());
         return 1;
     }
 
@@ -52,9 +52,9 @@ namespace LuaSpell
      *
      * @return uint32 entryId
      */
-    int GetEntry(lua_State* L, Spell* spell)
+    int GetEntry(Eluna* E, Spell* spell)
     {
-        Eluna::Push(L, spell->m_spellInfo->Id);
+        E->Push(spell->m_spellInfo->Id);
         return 1;
     }
 
@@ -63,9 +63,9 @@ namespace LuaSpell
      *
      * @return uint32 powerCost
      */
-    int GetPowerCost(lua_State* L, Spell* spell)
+    int GetPowerCost(Eluna* E, Spell* spell)
     {
-        Eluna::Push(L, spell->GetPowerCost());
+        E->Push(spell->GetPowerCost());
         return 1;
     }
 
@@ -74,21 +74,21 @@ namespace LuaSpell
      *
      * @return table reagents : a table containing the [ItemTemplate]s and amount of reagents needed for the [Spell]
     */
-    int GetReagentCost(lua_State* L, Spell* spell)
+    int GetReagentCost(Eluna* E, Spell* spell)
     {
         auto spellInfo = spell->GetSpellInfo();
         auto reagents = spellInfo->Reagent;
         auto reagentCounts = spellInfo->ReagentCount;
-        lua_newtable(L);
+        lua_newtable(E->L);
         for (auto i = 0; i < MAX_SPELL_REAGENTS; ++i)
         {
             if (reagents[i] <= 0)
                 continue;
             auto reagent = eObjectMgr->GetItemTemplate(reagents[i]);
             auto count = reagentCounts[i];
-            Eluna::Push(L, reagent);
-            Eluna::Push(L, count);
-            lua_settable(L, -3);
+            E->Push(reagent);
+            E->Push(count);
+            lua_settable(E->L, -3);
         }
         return 1;
     }
@@ -98,9 +98,9 @@ namespace LuaSpell
      *
      * @return int32 duration
      */
-    int GetDuration(lua_State* L, Spell* spell)
+    int GetDuration(Eluna* E, Spell* spell)
     {
-        Eluna::Push(L, spell->GetSpellInfo()->GetDuration());
+        E->Push(spell->GetSpellInfo()->GetDuration());
         return 1;
     }
 
@@ -111,16 +111,16 @@ namespace LuaSpell
      * @return float y : y coordinate of the [Spell]
      * @return float z : z coordinate of the [Spell]
      */
-    int GetTargetDest(lua_State* L, Spell* spell)
+    int GetTargetDest(Eluna* E, Spell* spell)
     {
         if (!spell->m_targets.HasDst())
             return 3;
         float x, y, z;
         spell->m_targets.GetDstPos()->GetPosition(x, y, z);
 
-        Eluna::Push(L, x);
-        Eluna::Push(L, y);
-        Eluna::Push(L, z);
+        E->Push(x);
+        E->Push(y);
+        E->Push(z);
         return 3;
     }
 
@@ -136,18 +136,18 @@ namespace LuaSpell
      *
      * @return [Object] target
      */
-    int GetTarget(lua_State* L, Spell* spell)
+    int GetTarget(Eluna* E, Spell* spell)
     {
         if (GameObject* target = spell->m_targets.GetGOTarget())
-            Eluna::Push(L, target);
+            E->Push(target);
         else if (Item* target = spell->m_targets.GetItemTarget())
-            Eluna::Push(L, target);
+            E->Push(target);
         else if (Corpse* target = spell->m_targets.GetCorpseTarget())
-            Eluna::Push(L, target);
+            E->Push(target);
         else if (Unit* target = spell->m_targets.GetUnitTarget())
-            Eluna::Push(L, target);
+            E->Push(target);
         else if (WorldObject* target = spell->m_targets.GetObjectTarget())
-            Eluna::Push(L, target);
+            E->Push(target);
         return 1;
     }
 
@@ -156,9 +156,9 @@ namespace LuaSpell
      *
      * @param bool repeat : set variable to 'true' for spell to automatically repeat
      */
-    int SetAutoRepeat(lua_State* L, Spell* spell)
+    int SetAutoRepeat(Eluna* E, Spell* spell)
     {
-        bool repeat = Eluna::CHECKVAL<bool>(L, 2);
+        bool repeat = E->CHECKVAL<bool>(2);
         spell->SetAutoRepeat(repeat);
         return 0;
     }
@@ -168,9 +168,9 @@ namespace LuaSpell
      *
      * @param bool skipCheck = false : skips initial checks to see if the [Spell] can be casted or not, this is optional
      */
-    int Cast(lua_State* L, Spell* spell)
+    int Cast(Eluna* E, Spell* spell)
     {
-        bool skipCheck = Eluna::CHECKVAL<bool>(L, 2, false);
+        bool skipCheck = E->CHECKVAL<bool>(2, false);
         spell->cast(skipCheck);
         return 0;
     }
@@ -178,7 +178,7 @@ namespace LuaSpell
     /**
      * Cancels the [Spell].
      */
-    int Cancel(lua_State* /*L*/, Spell* spell)
+    int Cancel(Eluna* /*E*/, Spell* spell)
     {
         spell->cancel();
         return 0;
@@ -187,10 +187,35 @@ namespace LuaSpell
     /**
      * Finishes the [Spell].
      */
-    int Finish(lua_State* /*L*/, Spell* spell)
+    int Finish(Eluna* /*E*/, Spell* spell)
     {
         spell->finish();
         return 0;
     }
+
+    ElunaRegister<Spell> SpellMethods[] =
+    {
+        // Getters
+        { "GetCaster", &LuaSpell::GetCaster },
+        { "GetCastTime", &LuaSpell::GetCastTime },
+        { "GetEntry", &LuaSpell::GetEntry },
+        { "GetDuration", &LuaSpell::GetDuration },
+        { "GetPowerCost", &LuaSpell::GetPowerCost },
+        { "GetReagentCost", &LuaSpell::GetReagentCost },
+        { "GetTargetDest", &LuaSpell::GetTargetDest },
+        { "GetTarget", &LuaSpell::GetTarget },
+
+        // Setters
+        { "SetAutoRepeat", &LuaSpell::SetAutoRepeat },
+
+        // Boolean
+        { "IsAutoRepeat", &LuaSpell::IsAutoRepeat },
+
+        // Other
+        { "Cancel", &LuaSpell::Cancel },
+        { "Cast", &LuaSpell::Cast },
+        { "Finish", &LuaSpell::Finish }
+    };
 };
 #endif
+

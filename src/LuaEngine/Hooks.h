@@ -80,13 +80,13 @@ namespace Hooks
         REGTYPE_CREATURE_GOSSIP,
         REGTYPE_GAMEOBJECT,
         REGTYPE_GAMEOBJECT_GOSSIP,
+        REGTYPE_SPELL,
         REGTYPE_ITEM,
         REGTYPE_ITEM_GOSSIP,
         REGTYPE_PLAYER_GOSSIP,
         REGTYPE_BG,
         REGTYPE_MAP,
         REGTYPE_INSTANCE,
-        REGTYPE_SPELL,
         REGTYPE_COUNT
     };
 
@@ -377,3 +377,4 @@ namespace Hooks
 };
 
 #endif // _HOOKS_H
+

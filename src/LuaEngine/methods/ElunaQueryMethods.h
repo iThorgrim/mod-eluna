@@ -18,15 +18,15 @@
  */
 namespace LuaQuery
 {
-    static void CheckFields(lua_State* L, ElunaQuery* result)
+    static void CheckFields(Eluna* E, ElunaQuery* result)
     {
-        uint32 field = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 field = E->CHECKVAL<uint32>(2);
         uint32 count = RESULT->GetFieldCount();
         if (field >= count)
         {
             char arr[256];
             snprintf(arr, sizeof(arr), "trying to access invalid field index %u. There are %u fields available and the indexes start from 0", field, count);
-            luaL_argerror(L, 2, arr);
+            luaL_argerror(E->L, 2, arr);
         }
     }
 
@@ -36,12 +36,12 @@ namespace LuaQuery
      * @param uint32 column
      * @return bool isNull
      */
-    int IsNull(lua_State* L, ElunaQuery* result)
+    int IsNull(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
 
-        Eluna::Push(L, RESULT->Fetch()[col].IsNull());
+        E->Push(RESULT->Fetch()[col].IsNull());
         return 1;
     }
 
@@ -50,9 +50,9 @@ namespace LuaQuery
      *
      * @return uint32 columnCount
      */
-    int GetColumnCount(lua_State* L, ElunaQuery* result)
+    int GetColumnCount(Eluna* E, ElunaQuery* result)
     {
-        Eluna::Push(L, RESULT->GetFieldCount());
+        E->Push(RESULT->GetFieldCount());
         return 1;
     }
 
@@ -61,12 +61,12 @@ namespace LuaQuery
      *
      * @return uint32 rowCount
      */
-    int GetRowCount(lua_State* L, ElunaQuery* result)
+    int GetRowCount(Eluna* E, ElunaQuery* result)
     {
         if (RESULT->GetRowCount() > (uint32)-1)
-            Eluna::Push(L, (uint32)-1);
+            E->Push((uint32)-1);
         else
-            Eluna::Push(L, (uint32)(RESULT->GetRowCount()));
+            E->Push((uint32)(RESULT->GetRowCount()));
         return 1;
     }
 
@@ -76,11 +76,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return bool data
      */
-    int GetBool(lua_State* L, ElunaQuery* result)
+    int GetBool(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<bool>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<bool>());
         return 1;
     }
 
@@ -90,11 +90,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return uint8 data
      */
-    int GetUInt8(lua_State* L, ElunaQuery* result)
+    int GetUInt8(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<uint8>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<uint8>());
         return 1;
     }
 
@@ -104,11 +104,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return uint16 data
      */
-    int GetUInt16(lua_State* L, ElunaQuery* result)
+    int GetUInt16(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<uint16>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<uint16>());
         return 1;
     }
 
@@ -118,11 +118,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return uint32 data
      */
-    int GetUInt32(lua_State* L, ElunaQuery* result)
+    int GetUInt32(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<uint32>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<uint32>());
         return 1;
     }
 
@@ -132,11 +132,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return uint64 data
      */
-    int GetUInt64(lua_State* L, ElunaQuery* result)
+    int GetUInt64(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<uint64>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<uint64>());
         return 1;
     }
 
@@ -146,11 +146,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return int8 data
      */
-    int GetInt8(lua_State* L, ElunaQuery* result)
+    int GetInt8(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<int8>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<int8>());
         return 1;
     }
 
@@ -160,11 +160,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return int16 data
      */
-    int GetInt16(lua_State* L, ElunaQuery* result)
+    int GetInt16(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<int16>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<int16>());
         return 1;
     }
 
@@ -174,11 +174,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return int32 data
      */
-    int GetInt32(lua_State* L, ElunaQuery* result)
+    int GetInt32(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<int32>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<int32>());
         return 1;
     }
 
@@ -188,11 +188,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return int64 data
      */
-    int GetInt64(lua_State* L, ElunaQuery* result)
+    int GetInt64(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<int64>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<int64>());
         return 1;
     }
 
@@ -202,11 +202,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return float data
      */
-    int GetFloat(lua_State* L, ElunaQuery* result)
+    int GetFloat(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<float>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<float>());
         return 1;
     }
 
@@ -216,11 +216,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return double data
      */
-    int GetDouble(lua_State* L, ElunaQuery* result)
+    int GetDouble(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<double>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<double>());
         return 1;
     }
 
@@ -230,11 +230,11 @@ namespace LuaQuery
      * @param uint32 column
      * @return string data
      */
-    int GetString(lua_State* L, ElunaQuery* result)
+    int GetString(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-        CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].Get<std::string>());
+        uint32 col = E->CHECKVAL<uint32>(2);
+        CheckFields(E, result);
+        E->Push(RESULT->Fetch()[col].Get<std::string>());
         return 1;
     }
 
@@ -247,9 +247,9 @@ namespace LuaQuery
      *
      * @return bool hadNextRow
      */
-    int NextRow(lua_State* L, ElunaQuery* result)
+    int NextRow(Eluna* E, ElunaQuery* result)
     {
-        Eluna::Push(L, RESULT->NextRow());
+        E->Push(RESULT->NextRow());
         return 1;
     }
 
@@ -270,22 +270,22 @@ namespace LuaQuery
      *
      * @return table rowData : table filled with row columns and data where `T[column] = data`
      */
-    int GetRow(lua_State* L, ElunaQuery* result)
+    int GetRow(Eluna* E, ElunaQuery* result)
     {
         uint32 col = RESULT->GetFieldCount();
         Field* row = RESULT->Fetch();
 
-        lua_createtable(L, 0, col);
-        int tbl = lua_gettop(L);
+        lua_createtable(E->L, 0, col);
+        int tbl = lua_gettop(E->L);
 
         for (uint32 i = 0; i < col; ++i)
         {
-            Eluna::Push(L, RESULT->GetFieldName(i));
+            E->Push(RESULT->GetFieldName(i));
 
             std::string _str = row[i].Get<std::string>();
             const char* str = _str.c_str();
             if (row[i].IsNull() || !str)
-                Eluna::Push(L);
+                E->Push();
             else
             {
                 // MYSQL_TYPE_LONGLONG Interpreted as string for lua
@@ -297,20 +297,45 @@ namespace LuaQuery
                     case DatabaseFieldTypes::Int64:
                     case DatabaseFieldTypes::Float:
                     case DatabaseFieldTypes::Double:
-                        Eluna::Push(L, strtod(str, NULL));
+                        E->Push(strtod(str, NULL));
                         break;
                     default:
-                        Eluna::Push(L, str);
+                        E->Push(str);
                         break;
                 }
             }
-            lua_rawset(L, tbl);
+            lua_rawset(E->L, tbl);
         }
 
-        lua_settop(L, tbl);
+        lua_settop(E->L, tbl);
         return 1;
     }
+
+    ElunaRegister<ElunaQuery> QueryMethods[] =
+    {
+        // Getters
+        { "GetColumnCount", &LuaQuery::GetColumnCount },
+        { "GetRowCount", &LuaQuery::GetRowCount },
+        { "GetRow", &LuaQuery::GetRow },
+        { "GetBool", &LuaQuery::GetBool },
+        { "GetUInt8", &LuaQuery::GetUInt8 },
+        { "GetUInt16", &LuaQuery::GetUInt16 },
+        { "GetUInt32", &LuaQuery::GetUInt32 },
+        { "GetUInt64", &LuaQuery::GetUInt64 },
+        { "GetInt8", &LuaQuery::GetInt8 },
+        { "GetInt16", &LuaQuery::GetInt16 },
+        { "GetInt32", &LuaQuery::GetInt32 },
+        { "GetInt64", &LuaQuery::GetInt64 },
+        { "GetFloat", &LuaQuery::GetFloat },
+        { "GetDouble", &LuaQuery::GetDouble },
+        { "GetString", &LuaQuery::GetString },
+
+        // Boolean
+        { "NextRow", &LuaQuery::NextRow },
+        { "IsNull", &LuaQuery::IsNull }
+    };
 };
 #undef RESULT
 
 #endif
+

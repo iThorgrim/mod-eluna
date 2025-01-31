@@ -15,7 +15,7 @@ struct DBCDefinition
     void* storage;
     const std::type_info& type;
     std::function<const void*(uint32)> lookupFunction;
-    std::function<void(lua_State*, const void*)> pushFunction;
+    std::function<void(Eluna*, const void*)> pushFunction;
 };
 
 extern std::vector<DBCDefinition> dbcRegistry;
@@ -28,9 +28,9 @@ extern std::vector<DBCDefinition> dbcRegistry;
         [](uint32 id) -> const void* {          \
             return store.LookupEntry(id);       \
         },                                      \
-        [](lua_State* L, const void* entry) {   \
+        [](Eluna* E, const void* entry) {       \
             auto cast_entry = static_cast<const entryType*>(entry); \
-            Eluna::Push(L, *cast_entry);        \
+            E->Push(*cast_entry);               \
         }                                       \
     }
 

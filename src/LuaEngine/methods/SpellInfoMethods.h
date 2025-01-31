@@ -31,10 +31,10 @@ namespace LuaSpellInfo
      * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [SpellInfo]'s name
      * @return [string] name
      */
-    int GetName(lua_State* L, SpellInfo* spell_info)
+    int GetName(Eluna* E, SpellInfo* spell_info)
     {
-        uint8 locale = Eluna::CHECKVAL<uint8>(L, 2, DEFAULT_LOCALE);
-        Eluna::Push(L, spell_info->SpellName[static_cast<LocaleConstant>(locale)]);
+        uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
+        E->Push(spell_info->SpellName[static_cast<LocaleConstant>(locale)]);
         return 1;
     }
     
@@ -62,10 +62,10 @@ namespace LuaSpellInfo
      * @param [uint32] attribute : the specific attribute to check.
      * @return [bool] has_attribute
      */
-    int HasAttribute(lua_State* L, SpellInfo* spell_info)
+    int HasAttribute(Eluna* E, SpellInfo* spell_info)
     {
-        int8 attributeType = Eluna::CHECKVAL<int8>(L, 2);
-        uint32 attribute    = Eluna::CHECKVAL<uint32>(L, 3);
+        int8 attributeType = E->CHECKVAL<int8>(2);
+        uint32 attribute    = E->CHECKVAL<uint32>(3);
 
         bool hasAttribute = false;
         if ( attributeType == -1 ) {
@@ -102,7 +102,7 @@ namespace LuaSpellInfo
             }
         }
 
-        Eluna::Push(L, hasAttribute);
+        E->Push(hasAttribute);
         return 1;
     }
     
@@ -128,9 +128,9 @@ namespace LuaSpellInfo
      * @param [int8] attributeType : The type of the attribute.
      * @return [uint32] attributes
      */
-    int GetAttributes(lua_State* L, SpellInfo* spell_info)
+    int GetAttributes(Eluna* E, SpellInfo* spell_info)
     {
-        int8 attributeType = Eluna::CHECKVAL<int8>(L, 2);
+        int8 attributeType = E->CHECKVAL<int8>(2);
         uint32 attributes;
 
         if ( attributeType == -1 ) {
@@ -166,7 +166,7 @@ namespace LuaSpellInfo
             }
         }
 
-        Eluna::Push(L, attributes);
+        E->Push(attributes);
         return 1;
     }
     
@@ -181,9 +181,9 @@ namespace LuaSpellInfo
      * 
      * @return [bool] is_affecting_area
      */
-    int IsAffectingArea(lua_State* L, SpellInfo* spell_info)
+    int IsAffectingArea(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsAffectingArea());
+        E->Push(spell_info->IsAffectingArea());
         return 1;
     }
     
@@ -196,9 +196,9 @@ namespace LuaSpellInfo
      *
      * @return [uint32] category
      */
-    int GetCategory(lua_State* L, SpellInfo* spell_info)
+    int GetCategory(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->GetCategory());
+        E->Push(spell_info->GetCategory());
         return 1;
     }
     
@@ -211,10 +211,10 @@ namespace LuaSpellInfo
      * @param [uint8] effect : The specific effect to check.
      * @return [bool] has_effect 
      */
-    int HasEffect(lua_State* L, SpellInfo* spell_info)
+    int HasEffect(Eluna* E, SpellInfo* spell_info)
     {
-        uint8 effect = Eluna::CHECKVAL<uint8>(L, 2);
-        Eluna::Push(L, spell_info->HasEffect(static_cast<SpellEffects>(effect)));
+        uint8 effect = E->CHECKVAL<uint8>(2);
+        E->Push(spell_info->HasEffect(static_cast<SpellEffects>(effect)));
         return 1;
     }
     
@@ -227,10 +227,10 @@ namespace LuaSpellInfo
      * @param [uint32] aura : The specific aura to check.
      * @return [bool] has_aura
      */
-    int HasAura(lua_State* L, SpellInfo* spell_info)
+    int HasAura(Eluna* E, SpellInfo* spell_info)
     {
-        uint32 aura = Eluna::CHECKVAL<uint32>(L, 2);
-        Eluna::Push(L, spell_info->HasAura(static_cast<AuraType>(aura)));
+        uint32 aura = E->CHECKVAL<uint32>(2);
+        E->Push(spell_info->HasAura(static_cast<AuraType>(aura)));
         return 1;
     }
     
@@ -241,9 +241,9 @@ namespace LuaSpellInfo
      * 
      * @return [bool] has_area_aura_effect
      */
-    int HasAreaAuraEffect(lua_State* L, SpellInfo* spell_info)
+    int HasAreaAuraEffect(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->HasAreaAuraEffect());
+        E->Push(spell_info->HasAreaAuraEffect());
         return 1;
     }
     
@@ -256,9 +256,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_explicit_discovery
      */
-    int IsExplicitDiscovery(lua_State* L, SpellInfo* spell_info)
+    int IsExplicitDiscovery(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsExplicitDiscovery());
+        E->Push(spell_info->IsExplicitDiscovery());
         return 1;
     }
 
@@ -270,9 +270,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_loot_crafting
      */
-    int IsLootCrafting(lua_State* L, SpellInfo* spell_info)
+    int IsLootCrafting(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsLootCrafting());
+        E->Push(spell_info->IsLootCrafting());
         return 1;
     }
 
@@ -284,9 +284,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_profression_or_riding
      */
-    int IsProfessionOrRiding(lua_State* L, SpellInfo* spell_info)
+    int IsProfessionOrRiding(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsProfessionOrRiding());
+        E->Push(spell_info->IsProfessionOrRiding());
         return 1;
     }
 
@@ -298,9 +298,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_profession
      */
-    int IsProfession(lua_State* L, SpellInfo* spell_info)
+    int IsProfession(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsProfession());
+        E->Push(spell_info->IsProfession());
         return 1;
     }
 
@@ -312,9 +312,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_primary_profession
      */
-    int IsPrimaryProfession(lua_State* L, SpellInfo* spell_info)
+    int IsPrimaryProfession(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsPrimaryProfession());
+        E->Push(spell_info->IsPrimaryProfession());
         return 1;
     }
 
@@ -326,9 +326,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_primary_profession_first_rank
      */
-    int IsPrimaryProfessionFirstRank(lua_State* L, SpellInfo* spell_info)
+    int IsPrimaryProfessionFirstRank(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsPrimaryProfessionFirstRank());
+        E->Push(spell_info->IsPrimaryProfessionFirstRank());
         return 1;
     }
 
@@ -340,9 +340,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_ability_learned_with_profession
      */
-    int IsAbilityLearnedWithProfession(lua_State* L, SpellInfo* spell_info)
+    int IsAbilityLearnedWithProfession(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsAbilityLearnedWithProfession());
+        E->Push(spell_info->IsAbilityLearnedWithProfession());
         return 1;
     }
 
@@ -356,10 +356,10 @@ namespace LuaSpellInfo
      * @param [uint32] skillType: The skill type to check against. Should be an integral value representing the skill type.
      * @return [bool] is_ability_of_skill_type
      */
-    int IsAbilityOfSkillType(lua_State* L, SpellInfo* spell_info)
+    int IsAbilityOfSkillType(Eluna* E, SpellInfo* spell_info)
     {
-        uint32 skillType = Eluna::CHECKVAL<uint32>(L, 2);
-        Eluna::Push(L, spell_info->IsAbilityOfSkillType(skillType));
+        uint32 skillType = E->CHECKVAL<uint32>(2);
+        E->Push(spell_info->IsAbilityOfSkillType(skillType));
         return 1;
     }
 
@@ -370,9 +370,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_targeting_area
      */
-    int IsTargetingArea(lua_State* L, SpellInfo* spell_info)
+    int IsTargetingArea(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsTargetingArea());
+        E->Push(spell_info->IsTargetingArea());
         return 1;
     }
 
@@ -384,9 +384,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] needs_explicit_unit_target
      */
-    int NeedsExplicitUnitTarget(lua_State* L, SpellInfo* spell_info)
+    int NeedsExplicitUnitTarget(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->NeedsExplicitUnitTarget());
+        E->Push(spell_info->NeedsExplicitUnitTarget());
         return 1;
     }
 
@@ -400,10 +400,10 @@ namespace LuaSpellInfo
      * @param triggeringSpell The spell by the casting of which the ability or spell represented by [SpellInfo] is triggered.
      * @return [bool] needs_to_be_triggered_by_caster
      */
-    int NeedsToBeTriggeredByCaster(lua_State* L, SpellInfo* spell_info)
+    int NeedsToBeTriggeredByCaster(Eluna* E, SpellInfo* spell_info)
     {
-        const SpellInfo* triggeringSpell = Eluna::CHECKOBJ<SpellInfo>(L, 2);
-        Eluna::Push(L, spell_info->NeedsToBeTriggeredByCaster(triggeringSpell));
+        const SpellInfo* triggeringSpell = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->NeedsToBeTriggeredByCaster(triggeringSpell));
         return 1;
     }
 
@@ -416,9 +416,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_self_cast
      */
-    int IsSelfCast(lua_State* L, SpellInfo* spell_info)
+    int IsSelfCast(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsSelfCast());
+        E->Push(spell_info->IsSelfCast());
         return 1;
     }
 
@@ -430,9 +430,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_passive
      */
-    int IsPassive(lua_State* L, SpellInfo* spell_info)
+    int IsPassive(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsPassive());
+        E->Push(spell_info->IsPassive());
         return 1;
     }
 
@@ -445,9 +445,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_autocastable
      */
-    int IsAutocastable(lua_State* L, SpellInfo* spell_info)
+    int IsAutocastable(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsAutocastable());
+        E->Push(spell_info->IsAutocastable());
         return 1;
     }
 
@@ -460,9 +460,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_stackable_with_ranks
      */
-    int IsStackableWithRanks(lua_State* L, SpellInfo* spell_info)
+    int IsStackableWithRanks(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsStackableWithRanks());
+        E->Push(spell_info->IsStackableWithRanks());
         return 1;
     }
 
@@ -475,9 +475,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_passive_stackable_with_ranks
      */
-    int IsPassiveStackableWithRanks(lua_State* L, SpellInfo* spell_info)
+    int IsPassiveStackableWithRanks(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsPassiveStackableWithRanks());
+        E->Push(spell_info->IsPassiveStackableWithRanks());
         return 1;
     }
 
@@ -489,9 +489,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_multi_slot_aura
      */
-    int IsMultiSlotAura(lua_State* L, SpellInfo* spell_info)
+    int IsMultiSlotAura(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsMultiSlotAura());
+        E->Push(spell_info->IsMultiSlotAura());
         return 1;
     }
 
@@ -500,9 +500,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_cooldown_started_on_event
      */
-    int IsCooldownStartedOnEvent(lua_State* L, SpellInfo* spell_info)
+    int IsCooldownStartedOnEvent(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsCooldownStartedOnEvent());
+        E->Push(spell_info->IsCooldownStartedOnEvent());
         return 1;
     }
 
@@ -511,9 +511,9 @@ namespace LuaSpellInfo
      *
      * @return [bool] is_death_persistant
      */
-    int IsDeathPersistent(lua_State* L, SpellInfo* spell_info)
+    int IsDeathPersistent(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsDeathPersistent());
+        E->Push(spell_info->IsDeathPersistent());
         return 1;
     }
 
@@ -522,224 +522,284 @@ namespace LuaSpellInfo
      *
      * @return [bool] : true if the [SpellInfo] requires a dead target; false otherwise
      */
-    int IsRequiringDeadTarget(lua_State* L, SpellInfo* spell_info)
+    int IsRequiringDeadTarget(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsRequiringDeadTarget());
+        E->Push(spell_info->IsRequiringDeadTarget());
         return 1;
     }
 
-    int IsAllowingDeadTarget(lua_State* L, SpellInfo* spell_info)
+    int IsAllowingDeadTarget(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsAllowingDeadTarget());
+        E->Push(spell_info->IsAllowingDeadTarget());
         return 1;
     }
 
-    int CanBeUsedInCombat(lua_State* L, SpellInfo* spell_info)
+    int CanBeUsedInCombat(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->CanBeUsedInCombat());
+        E->Push(spell_info->CanBeUsedInCombat());
         return 1;
     }
 
-    int IsPositive(lua_State* L, SpellInfo* spell_info)
+    int IsPositive(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsPositive());
+        E->Push(spell_info->IsPositive());
         return 1;
     }
 
-    int IsPositiveEffect(lua_State* L, SpellInfo* spell_info)
+    int IsPositiveEffect(Eluna* E, SpellInfo* spell_info)
     {
-        uint8 effIndex = Eluna::CHECKVAL<uint32>(L, 2);
-        Eluna::Push(L, spell_info->IsPositiveEffect(effIndex));
+        uint8 effIndex = E->CHECKVAL<uint32>(2);
+        E->Push(spell_info->IsPositiveEffect(effIndex));
         return 1;
     }
 
-    int IsChanneled(lua_State* L, SpellInfo* spell_info)
+    int IsChanneled(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsChanneled());
+        E->Push(spell_info->IsChanneled());
         return 1;
     }
 
-    int NeedsComboPoints(lua_State* L, SpellInfo* spell_info)
+    int NeedsComboPoints(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->NeedsComboPoints());
+        E->Push(spell_info->NeedsComboPoints());
         return 1;
     }
 
-    int IsBreakingStealth(lua_State* L, SpellInfo* spell_info)
+    int IsBreakingStealth(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsBreakingStealth());
+        E->Push(spell_info->IsBreakingStealth());
         return 1;
     }
 
-    int IsRangedWeaponSpell(lua_State* L, SpellInfo* spell_info)
+    int IsRangedWeaponSpell(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsRangedWeaponSpell());
+        E->Push(spell_info->IsRangedWeaponSpell());
         return 1;
     }
 
-    int IsAutoRepeatRangedSpell(lua_State* L, SpellInfo* spell_info)
+    int IsAutoRepeatRangedSpell(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsAutoRepeatRangedSpell());
+        E->Push(spell_info->IsAutoRepeatRangedSpell());
         return 1;
     }  
 
     
-    int IsAffectedBySpellMods(lua_State* L, SpellInfo* spell_info)
+    int IsAffectedBySpellMods(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsAffectedBySpellMods());
+        E->Push(spell_info->IsAffectedBySpellMods());
         return 1;
     }
     
-    /*  int IsAffectedBySpellMod(lua_State* L, SpellInfo* spell_info)
-        {
-            const SpellInfo* auraSpellInfo = Eluna::CHECKOBJ<SpellInfo>(L, 2);
-            Eluna::Push(L, spell_info->IsAffectedBySpellMod(auraSpellInfo));
-            return 1;
-        }
-    */
-    
-    int CanPierceImmuneAura(lua_State* L, SpellInfo* spell_info)
+    int CanPierceImmuneAura(Eluna* E, SpellInfo* spell_info)
     {
-        const SpellInfo* auraSpellInfo = Eluna::CHECKOBJ<SpellInfo>(L, 2);
-        Eluna::Push(L, spell_info->CanPierceImmuneAura(auraSpellInfo));
+        const SpellInfo* auraSpellInfo = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->CanPierceImmuneAura(auraSpellInfo));
         return 1;
     }
     
-    int CanDispelAura(lua_State* L, SpellInfo* spell_info)
+    int CanDispelAura(Eluna* E, SpellInfo* spell_info)
     {
-        const SpellInfo* auraSpellInfo = Eluna::CHECKOBJ<SpellInfo>(L, 2);
-        Eluna::Push(L, spell_info->CanDispelAura(auraSpellInfo));
+        const SpellInfo* auraSpellInfo = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->CanDispelAura(auraSpellInfo));
         return 1;
     }
     
-    int IsSingleTarget(lua_State* L, SpellInfo* spell_info)
+    int IsSingleTarget(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->IsSingleTarget());
+        E->Push(spell_info->IsSingleTarget());
         return 1;
     }
     
-    int IsAuraExclusiveBySpecificWith(lua_State* L, SpellInfo* spell_info)
+    int IsAuraExclusiveBySpecificWith(Eluna* E, SpellInfo* spell_info)
     {
-        const SpellInfo* spellInfo = Eluna::CHECKOBJ<SpellInfo>(L, 2);
-        Eluna::Push(L, spell_info->IsAuraExclusiveBySpecificWith(spellInfo));
+        const SpellInfo* spellInfo = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->IsAuraExclusiveBySpecificWith(spellInfo));
         return 1;
     }
     
-    int IsAuraExclusiveBySpecificPerCasterWith(lua_State* L, SpellInfo* spell_info)
+    int IsAuraExclusiveBySpecificPerCasterWith(Eluna* E, SpellInfo* spell_info)
     {
-        const SpellInfo* spellInfo = Eluna::CHECKOBJ<SpellInfo>(L, 2);
-        Eluna::Push(L, spell_info->IsAuraExclusiveBySpecificPerCasterWith(spellInfo));
+        const SpellInfo* spellInfo = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->IsAuraExclusiveBySpecificPerCasterWith(spellInfo));
         return 1;
     }
     
-    int CheckShapeshift(lua_State* L, SpellInfo* spell_info)
+    int CheckShapeshift(Eluna* E, SpellInfo* spell_info)
     {
-        uint32 form = Eluna::CHECKVAL<uint32>(L, 2);
-        Eluna::Push(L, spell_info->CheckShapeshift(form));
+        uint32 form = E->CHECKVAL<uint32>(2);
+        E->Push(spell_info->CheckShapeshift(form));
         return 1;
     }
     
-    int CheckLocation(lua_State* L, SpellInfo* spell_info)
+    int CheckLocation(Eluna* E, SpellInfo* spell_info)
     {
-        uint32 map_id = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 zone_id = Eluna::CHECKVAL<uint32>(L, 3);
-        uint32 area_id = Eluna::CHECKVAL<uint32>(L, 4);
-        Player* player = Eluna::CHECKOBJ<Player>(L, 5);
-        bool strict = Eluna::CHECKVAL<bool>(L, 6, false);
+        uint32 map_id = E->CHECKVAL<uint32>(2);
+        uint32 zone_id = E->CHECKVAL<uint32>(3);
+        uint32 area_id = E->CHECKVAL<uint32>(4);
+        Player* player = E->CHECKOBJ<Player>(5);
+        bool strict = E->CHECKVAL<bool>(6, false);
 
-        Eluna::Push(L, spell_info->CheckLocation(map_id, zone_id, area_id, player, strict));
+        E->Push(spell_info->CheckLocation(map_id, zone_id, area_id, player, strict));
         return 1;
     }
     
-    int CheckTarget(lua_State* L, SpellInfo* spell_info)
+    int CheckTarget(Eluna* E, SpellInfo* spell_info)
     {
-        const Unit* caster = Eluna::CHECKOBJ<Unit>(L, 2);
-        const WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 3);
-        bool implicit = Eluna::CHECKVAL<bool>(L, 4, true);
+        const Unit* caster = E->CHECKOBJ<Unit>(2);
+        const WorldObject* target = E->CHECKOBJ<WorldObject>(3);
+        bool implicit = E->CHECKVAL<bool>(4, true);
 
-        Eluna::Push(L, spell_info->CheckTarget(caster, target, implicit));
+        E->Push(spell_info->CheckTarget(caster, target, implicit));
         return 1;
     }
     
-    int CheckExplicitTarget(lua_State* L, SpellInfo* spell_info)
+    int CheckExplicitTarget(Eluna* E, SpellInfo* spell_info)
     {
-        const Unit* caster = Eluna::CHECKOBJ<Unit>(L, 2);
-        const WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 3);
-        const Item* item = Eluna::CHECKOBJ<Item>(L, 4, true);
+        const Unit* caster = E->CHECKOBJ<Unit>(2);
+        const WorldObject* target = E->CHECKOBJ<WorldObject>(3);
+        const Item* item = E->CHECKOBJ<Item>(4, true);
 
-        Eluna::Push(L, spell_info->CheckExplicitTarget(caster, target, item));
+        E->Push(spell_info->CheckExplicitTarget(caster, target, item));
         return 1;
     }
     
-    int CheckTargetCreatureType(lua_State* L, SpellInfo* spell_info)
+    int CheckTargetCreatureType(Eluna* E, SpellInfo* spell_info)
     {
-        const Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        const Unit* target = E->CHECKOBJ<Unit>(2);
 
-        Eluna::Push(L, spell_info->CheckTargetCreatureType(target));
+        E->Push(spell_info->CheckTargetCreatureType(target));
         return 1;
     }
     
-    int GetSchoolMask(lua_State* L, SpellInfo* spell_info)
+    int GetSchoolMask(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->GetSchoolMask());
+        E->Push(spell_info->GetSchoolMask());
         return 1;
     }
     
-    int GetAllEffectsMechanicMask(lua_State* L, SpellInfo* spell_info)
+    int GetAllEffectsMechanicMask(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->GetAllEffectsMechanicMask());
+        E->Push(spell_info->GetAllEffectsMechanicMask());
         return 1;
     }
     
-    int GetEffectMechanicMask(lua_State* L, SpellInfo* spell_info)
+    int GetEffectMechanicMask(Eluna* E, SpellInfo* spell_info)
     {
-        uint32 effIndex = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 effIndex = E->CHECKVAL<uint32>(2);
         
-        Eluna::Push(L, spell_info->GetEffectMechanicMask(static_cast<SpellEffIndex>(effIndex)));
+        E->Push(spell_info->GetEffectMechanicMask(static_cast<SpellEffIndex>(effIndex)));
         return 1;
     }
     
-    int GetSpellMechanicMaskByEffectMask(lua_State* L, SpellInfo* spell_info)
+    int GetSpellMechanicMaskByEffectMask(Eluna* E, SpellInfo* spell_info)
     {
-        uint32 effectmask = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 effectmask = E->CHECKVAL<uint32>(2);
 
-        Eluna::Push(L, spell_info->GetSpellMechanicMaskByEffectMask(effectmask));
+        E->Push(spell_info->GetSpellMechanicMaskByEffectMask(effectmask));
         return 1;
     }
     
-    int GetEffectMechanic(lua_State* L, SpellInfo* spell_info)
+    int GetEffectMechanic(Eluna* E, SpellInfo* spell_info)
     {
-        uint32 effIndex = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 effIndex = E->CHECKVAL<uint32>(2);
 
-        Eluna::Push(L, spell_info->GetEffectMechanic(static_cast<SpellEffIndex>(effIndex)));
+        E->Push(spell_info->GetEffectMechanic(static_cast<SpellEffIndex>(effIndex)));
         return 1;
     }
     
-    int GetDispelMask(lua_State* L, SpellInfo* spell_info)
+    int GetDispelMask(Eluna* E, SpellInfo* spell_info)
     {
-        uint32 type = Eluna::CHECKVAL<uint32>(L, 2, false);
+        uint32 type = E->CHECKVAL<uint32>(2, false);
 
-        Eluna::Push(L, type != 0 ? spell_info->GetDispelMask(static_cast<DispelType>(type)) : spell_info->GetDispelMask());
+        E->Push(type != 0 ? spell_info->GetDispelMask(static_cast<DispelType>(type)) : spell_info->GetDispelMask());
         return 1;
     }
     
-    int GetExplicitTargetMask(lua_State* L, SpellInfo* spell_info)
+    int GetExplicitTargetMask(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->GetExplicitTargetMask());
+        E->Push(spell_info->GetExplicitTargetMask());
         return 1;
     }
     
-    int GetAuraState(lua_State* L, SpellInfo* spell_info)
+    int GetAuraState(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->GetAuraState());
+        E->Push(spell_info->GetAuraState());
         return 1;
     }
     
-    int GetSpellSpecific(lua_State* L, SpellInfo* spell_info)
+    int GetSpellSpecific(Eluna* E, SpellInfo* spell_info)
     {
-        Eluna::Push(L, spell_info->GetSpellSpecific());
+        E->Push(spell_info->GetSpellSpecific());
         return 1;
     }
-}
+
+    ElunaRegister<SpellInfo> SpellInfoMethods[] =
+    {
+        // Getters
+        { "GetAttributes", &LuaSpellInfo::GetAttributes },
+        { "GetCategory", &LuaSpellInfo::GetCategory },
+        { "GetName", &LuaSpellInfo::GetName },
+        { "CheckShapeshift", &LuaSpellInfo::CheckShapeshift },
+        { "CheckLocation", &LuaSpellInfo::CheckLocation },
+        { "CheckTarget", &LuaSpellInfo::CheckTarget },
+        { "CheckExplicitTarget", &LuaSpellInfo::CheckExplicitTarget },
+        { "CheckTargetCreatureType", &LuaSpellInfo::CheckTargetCreatureType },
+        { "CheckTargetCreatureType", &LuaSpellInfo::CheckTargetCreatureType },
+        { "GetSchoolMask", &LuaSpellInfo::GetSchoolMask },
+        { "GetAllEffectsMechanicMask", &LuaSpellInfo::GetAllEffectsMechanicMask },
+        { "GetEffectMechanicMask", &LuaSpellInfo::GetEffectMechanicMask },
+        { "GetSpellMechanicMaskByEffectMask", &LuaSpellInfo::GetSpellMechanicMaskByEffectMask },
+        { "GetEffectMechanic", &LuaSpellInfo::GetEffectMechanic },
+        { "GetDispelMask", &LuaSpellInfo::GetDispelMask },
+        { "GetExplicitTargetMask", &LuaSpellInfo::GetExplicitTargetMask },
+        { "GetAuraState", &LuaSpellInfo::GetAuraState },
+        { "GetSpellSpecific", &LuaSpellInfo::GetSpellSpecific },
+
+        // Setters
+
+        // Boolean
+        { "HasAreaAuraEffect", &LuaSpellInfo::HasAreaAuraEffect },
+        { "HasAttribute", &LuaSpellInfo::HasAttribute },
+        { "HasAura", &LuaSpellInfo::HasAura },
+        { "HasEffect", &LuaSpellInfo::HasEffect },
+
+        { "IsAbilityLearnedWithProfession", &LuaSpellInfo::IsAbilityLearnedWithProfession },
+        { "IsAbilityOfSkillType", &LuaSpellInfo::IsAbilityOfSkillType },
+        { "IsAffectingArea", &LuaSpellInfo::IsAffectingArea },
+        { "IsAllowingDeadTarget", &LuaSpellInfo::IsAllowingDeadTarget },
+        { "IsAutocastable", &LuaSpellInfo::IsAutocastable },
+        { "IsAutoRepeatRangedSpell", &LuaSpellInfo::IsAutoRepeatRangedSpell },
+        { "IsBreakingStealth", &LuaSpellInfo::IsBreakingStealth },
+        { "IsChanneled", &LuaSpellInfo::IsChanneled },
+        { "IsCooldownStartedOnEvent", &LuaSpellInfo::IsCooldownStartedOnEvent },
+        { "IsDeathPersistent", &LuaSpellInfo::IsDeathPersistent },
+        { "IsExplicitDiscovery", &LuaSpellInfo::IsExplicitDiscovery },
+        { "IsLootCrafting", &LuaSpellInfo::IsLootCrafting },
+        { "IsMultiSlotAura", &LuaSpellInfo::IsMultiSlotAura },
+        { "IsPassive", &LuaSpellInfo::IsPassive },
+        { "IsPassiveStackableWithRanks", &LuaSpellInfo::IsPassiveStackableWithRanks },
+        { "IsPositive", &LuaSpellInfo::IsPositive },
+        { "IsPositiveEffect", &LuaSpellInfo::IsPositiveEffect },
+        { "IsPrimaryProfession", &LuaSpellInfo::IsPrimaryProfession },
+        { "IsPrimaryProfessionFirstRank", &LuaSpellInfo::IsPrimaryProfessionFirstRank },
+        { "IsProfession", &LuaSpellInfo::IsProfession },
+        { "IsProfessionOrRiding", &LuaSpellInfo::IsProfessionOrRiding },
+        { "IsRangedWeaponSpell", &LuaSpellInfo::IsRangedWeaponSpell },
+        { "IsRequiringDeadTarget", &LuaSpellInfo::IsRequiringDeadTarget },
+        { "IsStackableWithRanks", &LuaSpellInfo::IsStackableWithRanks },
+        { "IsTargetingArea", &LuaSpellInfo::IsTargetingArea },
+        { "IsAffectedBySpellMods", &LuaSpellInfo::IsAffectedBySpellMods },
+        { "CanPierceImmuneAura", &LuaSpellInfo::CanPierceImmuneAura },
+        { "CanDispelAura", &LuaSpellInfo::CanDispelAura },
+        { "IsSingleTarget", &LuaSpellInfo::IsSingleTarget },
+        { "IsAuraExclusiveBySpecificWith", &LuaSpellInfo::IsAuraExclusiveBySpecificWith },
+        { "IsAuraExclusiveBySpecificPerCasterWith", &LuaSpellInfo::IsAuraExclusiveBySpecificPerCasterWith },
+        { "CanBeUsedInCombat", &LuaSpellInfo::CanBeUsedInCombat },
+
+        { "NeedsComboPoints", &LuaSpellInfo::NeedsComboPoints },
+        { "NeedsExplicitUnitTarget", &LuaSpellInfo::NeedsExplicitUnitTarget },
+        { "NeedsToBeTriggeredByCaster", &LuaSpellInfo::NeedsToBeTriggeredByCaster }
+    };
+};
 #endif
 
