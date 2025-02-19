@@ -126,6 +126,8 @@ luaL_Reg GlobalMethods[] =
     { "PrintError", &LuaGlobalFunctions::PrintError },
     { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
     { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
+    { "GetGossipMenuOptionLocale", &LuaGlobalFunctions::GetGossipMenuOptionLocale },
+    { "GetMapEntrance", &LuaGlobalFunctions::GetMapEntrance },
     { "GetSpellInfo", &LuaGlobalFunctions::GetSpellInfo },
 
     // Boolean
@@ -537,6 +539,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
     { "GetPlayerSettingValue", &LuaPlayer::GetPlayerSettingValue },
     { "GetTrader", &LuaPlayer::GetTrader },
+    { "GetBonusTalentCount", &LuaPlayer::GetBonusTalentCount },
 
     // Setters
     { "AdvanceSkillsToMax", &LuaPlayer::AdvanceSkillsToMax },
@@ -570,6 +573,9 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
     { "SetGender", &LuaPlayer::SetGender },
     { "SetSheath", &LuaPlayer::SetSheath },
+    { "SetBonusTalentCount", &LuaPlayer::SetBonusTalentCount },
+    { "AddBonusTalent", &LuaPlayer::AddBonusTalent },
+    { "RemoveBonusTalent", &LuaPlayer::RemoveBonusTalent },
     { "GetHomebind", &LuaPlayer::GetHomebind },
     { "GetSpells", &LuaPlayer::GetSpells },
 
@@ -966,6 +972,7 @@ ElunaRegister<ItemTemplate> ItemTemplateMethods[] =
     { "GetAllowableRace", &LuaItemTemplate::GetAllowableRace },
     { "GetItemLevel", &LuaItemTemplate::GetItemLevel },
     { "GetRequiredLevel", &LuaItemTemplate::GetRequiredLevel },
+    { "GetIcon", &LuaItemTemplate::GetIcon },
     { NULL, NULL }
 };
 
